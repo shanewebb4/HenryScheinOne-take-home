@@ -6,20 +6,22 @@ public class WordWrapper {
     // Should break text on word boundaries, by replacing a space with a newline char (does that mean leave punctuation in?)
     // Should output the resulting text
     public static String wrap(String text, int maxLineLength) {
+        // TODO: what if a word is larger than maxLineLength?
+
         StringBuilder wrappedString = new StringBuilder();
         Scanner scanner = new Scanner(text);
         LinkedList<String> queue = new LinkedList<>();
+        LinkedList<String> cache = new LinkedList<>();
 
         while (scanner.hasNext()) {
             Integer counter = 0;
             StringBuilder line = new StringBuilder();
 
             // check if queue has any cached words
-            while (!queue.isEmpty()) {
-                line.append(queue.removeLast());
-                if (queue.size() >= 1) {
-                    line.append(" ");
-                }
+            while (!cache.isEmpty()) {
+                String forQueue = cache.removeLast();
+                counter += forQueue.length();
+                queue.addFirst(forQueue);
             }
 
             // put words in a queue, keeping track of char count
@@ -27,19 +29,23 @@ public class WordWrapper {
                 try {
                     String word = scanner.next();
                     counter += word.length();
-
-                    if (counter <= maxLineLength) {
+                    // add to queue or add to cache?
+                    // depends on counter?
+                    if (counter < maxLineLength) {
                         queue.addFirst(word);
+                        counter++;
                     } else {
-                        ///
-                        /// this could be better
-                        ///
-                        queue.addFirst(word);
-                        line.append("\n").append(queue.removeLast());
-                        break;
+                        cache.addFirst(word);
                     }
                 } catch (Exception e) {
                     System.out.println(e);
+                }
+            }
+
+            while (!queue.isEmpty()) {
+                line.append(queue.removeLast());
+                if (queue.size() >= 1) {
+                    line.append(" ");
                 }
             }
 
@@ -50,8 +56,8 @@ public class WordWrapper {
         }
 
         // check if queue is empty
-        if (!queue.isEmpty()) {
-            wrappedString.append(queue.removeLast()).append("\n");
+        if (!cache.isEmpty()) {
+            wrappedString.append(cache.removeLast()).append("\n");
         }
 
         System.out.print(wrappedString);
@@ -60,6 +66,6 @@ public class WordWrapper {
     }
 
     public static void main(String[] args) {
-        WordWrapper.wrap("this text is wrapped", 8);
+        WordWrapper.wrap("This paragraph contains several sentences. The aim is to provide numerous amounts of large words. Also to test the functionality with punctuation.", 20);
     }
 }
