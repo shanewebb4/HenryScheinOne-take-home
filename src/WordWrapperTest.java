@@ -56,4 +56,11 @@ public class WordWrapperTest {
         assertEquals(oneWordExpected, actual);
     }
 
+    @Test
+    public void shouldReturnEmptyString() {
+        String actual = WordWrapper.wrap("", 12);
+        assertEquals("", actual);
+        String actual2 = WordWrapper.wrap(" ", 12);
+        assertEquals("", actual2);
+    }
 }
