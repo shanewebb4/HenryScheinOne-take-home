@@ -94,16 +94,18 @@ public class WordWrapper {
             wrappedString.append(cache.removeLast()).append("\n");
         }
 
+        // output the wrapped text and return
         System.out.print(wrappedString);
         scanner.close();
         return wrappedString.toString();
     }
 
     private static String[] splitWord(String wordToSplit, int maxWordLength) {
-        int wordLen = wordToSplit.length();
-        int size = (wordToSplit.length() / maxWordLength + 1);
+        // set array size based on word length and num chars in each substring
+        int size = wordToSplit.length() % maxWordLength == 0 ? wordToSplit.length()/maxWordLength : (wordToSplit.length() / maxWordLength + 1);
         String[] splitWords = new String[size];
         int j =0;
+
         for (int i=0; i<size; i++) {
             if (i==size-1){
                 splitWords[i] = wordToSplit.substring(j);
@@ -113,9 +115,5 @@ public class WordWrapper {
             j+=maxWordLength;
         }
         return splitWords;
-    }
-
-    public static void main(String[] args) {
-         WordWrapper.wrap("Fortuitously, this paragraph accommodates some large letter designations, and small words. The aim is to corroborate the functionality of the wrap function when filled with many words, large and small.", 5);
     }
 }
