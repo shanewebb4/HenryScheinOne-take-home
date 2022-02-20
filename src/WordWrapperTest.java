@@ -9,6 +9,6 @@ public class WordWrapperTest {
     @Test
     public void wrapEightChars() {
         String actual = WordWrapper.wrap(toBeWrapped, 8);
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
     }
 }
