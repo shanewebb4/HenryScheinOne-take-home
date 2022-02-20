@@ -6,14 +6,13 @@ public class WordWrapper {
     // Should break text on word boundaries, by replacing a space with a newline char (does that mean leave punctuation in?)
     // Should output the resulting text
     public static String wrap(String text, int maxLineLength) {
-        // TODO: what if a word is larger than maxLineLength?
 
         StringBuilder wrappedString = new StringBuilder();
         Scanner scanner = new Scanner(text);
         LinkedList<String> queue = new LinkedList<>();
         LinkedList<String> cache = new LinkedList<>();
 
-        while (scanner.hasNext()) {
+        while (scanner.hasNext() || !cache.isEmpty()) {
             Integer counter = 0;
             StringBuilder line = new StringBuilder();
 
@@ -21,24 +20,51 @@ public class WordWrapper {
             while (!cache.isEmpty()) {
                 String forQueue = cache.removeLast();
                 counter += forQueue.length();
-                queue.addFirst(forQueue);
+                if (counter < maxLineLength) {
+                    queue.addFirst(forQueue);
+                    counter++;
+                }
+                else {
+                    queue.addFirst(forQueue);
+                    break;
+                }
             }
 
             // put words in a queue, keeping track of char count
             while (counter < maxLineLength) {
                 try {
                     String word = scanner.next();
-                    counter += word.length();
-                    // add to queue or add to cache?
-                    // depends on counter?
-                    if (counter < maxLineLength) {
-                        queue.addFirst(word);
-                        counter++;
-                    } else {
-                        cache.addFirst(word);
+                    if (word.length() > maxLineLength) {
+                        String[] splits = splitWord(word, maxLineLength);
+                        for (String split : splits) {
+                            counter += split.length();
+                            if (counter < maxLineLength) {
+                                queue.addFirst(split);
+                                counter++;
+                            }
+                            else if (counter <= maxLineLength) {
+                                queue.addFirst(split);
+                            }
+                            else {
+                                cache.addFirst(split);
+                            }
+                        }
+                    }
+
+                    else {
+                        counter += word.length();
+                        // add to queue or add to cache?
+                        // depends on counter?
+                        if (counter < maxLineLength) {
+                            queue.addFirst(word);
+                            counter++;
+                        } else {
+                            cache.addFirst(word);
+                        }
                     }
                 } catch (Exception e) {
-                    System.out.println(e);
+                    // System.out.println(e);
+                    break;
                 }
             }
 
@@ -65,7 +91,23 @@ public class WordWrapper {
         return wrappedString.toString();
     }
 
+    private static String[] splitWord(String wordToSplit, int maxWordLength) {
+        int wordLen = wordToSplit.length();
+        int size = (wordToSplit.length() / maxWordLength + 1);
+        String[] splitWords = new String[size];
+        int j =0;
+        for (int i=0; i<size; i++) {
+            if (i==size-1){
+                splitWords[i] = wordToSplit.substring(j);
+                continue;
+            }
+            splitWords[i] = wordToSplit.substring(j, maxWordLength+j);
+            j+=maxWordLength;
+        }
+        return splitWords;
+    }
+
     public static void main(String[] args) {
-        WordWrapper.wrap("This paragraph contains several sentences. The aim is to provide numerous amounts of large words. Also to test the functionality with punctuation.", 20);
+         WordWrapper.wrap("Toneenormousandridiculouslylargewordthatisfake", 5);
     }
 }
