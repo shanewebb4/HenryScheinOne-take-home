@@ -6,7 +6,8 @@ public class WordWrapper {
     // Should break text on word boundaries, by replacing a space with a newline char (does that mean leave punctuation in?)
     // Should output the resulting text
     public static String wrap(String text, int maxLineLength) {
-
+        // setup a scanner to read the text
+        // setup two queues for managing the breaks
         StringBuilder wrappedString = new StringBuilder();
         Scanner scanner = new Scanner(text);
         LinkedList<String> queue = new LinkedList<>();
@@ -16,7 +17,7 @@ public class WordWrapper {
             Integer counter = 0;
             StringBuilder line = new StringBuilder();
 
-            // check if queue has any cached words
+            // check if cache has anything to move to queue
             while (!cache.isEmpty()) {
                 String forQueue = cache.removeLast();
                 counter += forQueue.length();
@@ -34,6 +35,8 @@ public class WordWrapper {
             while (counter < maxLineLength) {
                 try {
                     String word = scanner.next();
+
+                    // if word length is > maxLineLength, split that word
                     if (word.length() > maxLineLength) {
                         String[] splits = splitWord(word, maxLineLength);
                         for (String split : splits) {
@@ -51,23 +54,28 @@ public class WordWrapper {
                         }
                     }
 
+                    // otherwise add word to queue or cache, depending on char count
                     else {
                         counter += word.length();
-                        // add to queue or add to cache?
-                        // depends on counter?
                         if (counter < maxLineLength) {
                             queue.addFirst(word);
                             counter++;
-                        } else {
+                        }
+                        else if (counter <= maxLineLength) {
+                            queue.addFirst(word);
+                        }
+                        else {
                             cache.addFirst(word);
                         }
                     }
                 } catch (Exception e) {
-                    // System.out.println(e);
+                    // should only reach here if scanner is at the end of the text
                     break;
                 }
             }
 
+            // append the word(s) that have been queued up
+            // add a space if there is more than one word
             while (!queue.isEmpty()) {
                 line.append(queue.removeLast());
                 if (queue.size() >= 1) {
@@ -75,13 +83,13 @@ public class WordWrapper {
                 }
             }
 
-            // append the line to the main string
+            // append the line of words to the return value
             if (line.length() > 0) {
                 wrappedString.append(line).append("\n");
             }
         }
 
-        // check if queue is empty
+        // append anything left in the cache
         if (!cache.isEmpty()) {
             wrappedString.append(cache.removeLast()).append("\n");
         }
@@ -108,6 +116,6 @@ public class WordWrapper {
     }
 
     public static void main(String[] args) {
-         WordWrapper.wrap("Toneenormousandridiculouslylargewordthatisfake", 5);
+         WordWrapper.wrap("Fortuitously, this paragraph accommodates some large letter designations, and small words. The aim is to corroborate the functionality of the wrap function when filled with many words, large and small.", 5);
     }
 }

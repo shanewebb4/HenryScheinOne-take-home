@@ -10,7 +10,7 @@ public class WordWrapperTest {
     private final String eightCharsToBeWrapped = "this text is wrapped";
     private final String eightCharsExpected = "this\ntext is\nwrapped\n";
     private final String twentyCharsToBeWrapped = "This paragraph contains several sentences. The aim is to provide numerous amounts of large words. Also to test the functionality with punctuation.";
-    private final String twentyCharsExpected = "This paragraph\ncontains several\nsentences. The aim\nis to provide\nnumerous amounts of\nlarge words. Also\nto test the\nfunctionality with\npunctuation.\n";
+    private final String twentyCharsExpected = "This paragraph\ncontains several\nsentences. The aim\nis to provide\nnumerous amounts of\nlarge words. Also to\ntest the\nfunctionality with\npunctuation.\n";
     private final String incorrectToBeWrapped = "This text will be wrapped incorrectly. The test should pass if they are not equal.";
     private final String incorrectToBeWrappedExpected = "This text will\nbe wrapped incorrectly.\nThe test should\npass if they\nare not equal.\n";
     private final String shouldSplitOneBigWordToBeWrapped = "oneenormousandridiculouslylargewordthatisfake";
