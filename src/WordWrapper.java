@@ -14,32 +14,42 @@ public class WordWrapper {
             Integer counter = 0;
             StringBuilder line = new StringBuilder();
 
-            // if queue is empty, get next word
-            // increment counter
-            // if counter is less than max, get next word
-            // increment counter
-            // if counter is more than max, remove last from queue
-            // if queue is not empty, remove last with a space
-            // if queue is empty, break and append to master String
-            while (counter < maxLineLength) {
-                try {
-                    String word = scanner.next();
-                    counter += word.length();
-                    queue.addFirst(word);
-                } catch (Exception e) {
-                    System.out.println(e);
-                }
-            }
-
+            // check if queue has any cached words
             while (!queue.isEmpty()) {
                 line.append(queue.removeLast());
                 if (queue.size() >= 1) {
                     line.append(" ");
                 }
             }
-            wrappedString.append(line).append("\n");
+
+            // put words in a queue, keeping track of char count
+            while (counter < maxLineLength) {
+                try {
+                    String word = scanner.next();
+                    counter += word.length();
+
+                    if (counter <= maxLineLength) {
+                        queue.addFirst(word);
+                    } else {
+                        ///
+                        /// this could be better
+                        ///
+                        queue.addFirst(word);
+                        line.append("\n").append(queue.removeLast());
+                        break;
+                    }
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+            }
+
+            // append the line to the main string
+            if (line.length() > 0) {
+                wrappedString.append(line).append("\n");
+            }
         }
 
+        // check if queue is empty
         if (!queue.isEmpty()) {
             wrappedString.append(queue.removeLast()).append("\n");
         }
