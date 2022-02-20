@@ -17,7 +17,8 @@ public class WordWrapperTest {
     private final String shouldSplitOneBigWordExpected = "oneen\normou\nsandr\nidicu\nlousl\nylarg\neword\nthati\nsfake\n";
     private final String shouldSplitBigWordsToBeWrappd = "Fortuitously, this paragraph accommodates some large letter designations, and small words. The aim is to corroborate the functionality of the wrap function when filled with many words, large and small.";
     private final String shouldSplitBigWordsExpected = "Fortuitous\nly, this\nparagraph\naccommodat\nes some\nlarge\nletter\ndesignatio\nns, and\nsmall\nwords. The\naim is to\ncorroborat\ne the\nfunctional\nity of the\nwrap\nfunction\nwhen\nfilled\nwith many\nwords,\nlarge and\nsmall.\n";
-
+    private final String oneWordToBeWrapped = "a";
+    private final String oneWordExpected = "a\n";
 
     @Test
     public void wrapEightChars() {
@@ -48,4 +49,11 @@ public class WordWrapperTest {
         String actual = WordWrapper.wrap(shouldSplitBigWordsToBeWrappd, 10);
         assertEquals(shouldSplitBigWordsExpected, actual);
     }
+
+    @Test
+    public void shouldReturnOneLetterWord() {
+        String actual = WordWrapper.wrap(oneWordToBeWrapped, 12);
+        assertEquals(oneWordExpected, actual);
+    }
+
 }
